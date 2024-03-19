@@ -16,5 +16,5 @@ public class Seller {
     public String sellerName;
     @OneToMany
     @JoinColumn(name="product_fk")
-    public List<Product> prdoducts;
+    public List<Product> products;
 }
