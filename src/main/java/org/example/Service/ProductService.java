@@ -2,6 +2,7 @@ package org.example.Service;
 import org.example.Entity.Seller;
 import org.example.Entity.Product;
 import org.example.Exception.ProductNotFoundException;
+import org.example.Main;
 import org.example.Repository.SellerRepository;
 import org.example.Repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,17 @@ public class ProductService {
 
     //Delete product by Id
     public Product deleteProduct(int productId){
+        Optional<Product> productOptional = productRepository.findById(productId);
+        Product product = productOptional.get();
+        productRepository.delete(product);
+        Main.log.info("ProductService: deleting product using ID: "+productId+" named: "+product);
+        return product;
+    }
+    /*
+    //old delete code
+    public Product deleteProduct(int productId){
         productRepository.deleteById(productId);
         return null;
     }
+    */
 }
