@@ -19,38 +19,23 @@ public class SellerService {
         this.sellerRepository = sellerRepository;
     }
 
+// Get All Sellers
     public List<Seller> getAllSellers(){
         Main.log.info("Getting all sellers");
         return sellerRepository.findAll();
     }
 
-//    public Seller saveSeller(Seller seller) throws SellerException {
-//        List<Seller> sellerList = getAllSellers();
-//        if (seller.getSellerId() == 0 ) {
-//            Main.log.warn("Seller's exception due to sellers name cannot be zero");
-//            throw new SellerException("Seller's id cannot be zero.");
-//        }
-//        if (seller.getSellerName().isEmpty()) {
-//            Main.log.warn("Seller's exception due to sellers name cannot be Null");
-//            throw new SellerException("Seller's name cannot be Null.");
-//        }
-//        if (sellerList.contains(seller)){
-//            Main.log.warn("Seller's exception due to duplicate sellers name.");
-//            throw new SellerException("Duplicate sellers name: " + seller);
-//        }
-//        Main.log.info("Adding a seller" + seller);
-//        return sellerRepository.save(seller);
-//    }
+// Add a Seller to SellerList
 public Seller saveSeller(Seller seller) throws SellerException {
     List<Seller> sellerList = getAllSellers();
 
-
+// Logic to check to make sure Seller Name is not Empty/Blank
     if (seller.getSellerName().isEmpty()) {
         Main.log.warn("Seller's exception due to seller's name cannot be null");
         throw new SellerException("Seller's name cannot be null.");
     }
 
-    // Check for duplicate seller names
+    // Logic to check for  duplicate seller names
     boolean isDuplicateName = sellerList.stream()
             .anyMatch(existingSeller -> existingSeller.getSellerName().equalsIgnoreCase(seller.getSellerName()));
 
@@ -64,9 +49,5 @@ public Seller saveSeller(Seller seller) throws SellerException {
 }
 
 
-    public boolean isValidSeller(int sellerId) throws SellerException {
-        List<Seller> sellerList = getAllSellers();
-        return sellerList.stream().anyMatch(seller -> seller.getSellerId() == sellerId);
-    }
     
 }
