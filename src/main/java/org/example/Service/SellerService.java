@@ -46,8 +46,5 @@ public Seller saveSeller(Seller seller) throws SellerException {
 
     Main.log.info("Adding a seller: " + seller);
     return sellerRepository.save(seller);
-}
-
-
-    
+    }
 }

@@ -24,7 +24,7 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    //Update a product and return it
+    //Add a product and return it
     public Product saveProduct(int sellerId, Product p) throws ProductNotFoundException {
         Optional<Seller> optional = sellerRepository.findById(sellerId);
         Seller s;
@@ -52,5 +52,11 @@ public class ProductService {
         }else{
             return p.get();
         }
+    }
+
+    //Delete product by Id
+    public Product deleteProduct(int productId){
+        productRepository.deleteById(productId);
+        return null;
     }
 }
