@@ -60,7 +60,7 @@ public class ProductService {
         Optional<Product> productOptional = productRepository.findById(productId);
         Product product = productOptional.get();
         productRepository.delete(product);
-        Main.log.info("ProductService: deleting product using ID: "+productId+" named: "+product);
+        Main.log.info("ProductService: deleting product for ID: "+productId+" named: "+product);
         return product;
     }
     /*
@@ -70,4 +70,14 @@ public class ProductService {
         return null;
     }
     */
+
+    //Update product and return the update
+    public Product updateProductTitle(int productId, Product newProduct){
+        Optional<Product> productOptional = productRepository.findById(productId);
+        Product product = productOptional.get();
+        product.setProductTitle(newProduct.getProductTitle());
+        productRepository.save(product);
+        Main.log.info("Updated product for ID: "+productId+", now named: "+product);
+        return product;
+    }
 }

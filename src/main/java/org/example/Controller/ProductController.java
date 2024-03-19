@@ -54,4 +54,9 @@ public class ProductController {
     public Product deleteProduct(@PathVariable int productId){
         return productService.deleteProduct(productId);
     }
+
+    @PatchMapping("product/{productId}")
+    public Product deleteProduct(@PathVariable int productId, @RequestBody Product product){
+        return productService.updateProductTitle(productId, product);
+    }
 }
