@@ -41,7 +41,7 @@ public class ProductService {
         }
 
         // Product price and title logic check
-        if (p.getProductPrice() == 0 || p.getProductTitle().isEmpty()) {
+        if (p.getProductPrice() == 0 || p.getProductTitle().trim().isEmpty()) {
             throw new ProductNotFoundException("Product must have a name and price greater than zero.");
         } else {
 
@@ -76,12 +76,15 @@ public class ProductService {
     }
 
     //Delete product by Id
-    public Product deleteProduct(int productId){
+    public Product deleteProduct(int productId) throws ProductNotFoundException {
         Optional<Product> productOptional = productRepository.findById(productId);
+        if(productOptional.isEmpty()){
+            throw new ProductNotFoundException("Product was not found, please try again..");
+        }else{
         Product product = productOptional.get();
         productRepository.delete(product);
         Main.log.info("ProductService: deleting product for ID: "+productId+" named: "+product);
-        return product;
+        return product;}
     }
     /*
     //old delete code

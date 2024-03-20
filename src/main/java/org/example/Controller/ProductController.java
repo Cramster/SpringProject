@@ -3,8 +3,10 @@ package org.example.Controller;
 import org.example.Entity.Seller;
 import org.example.Entity.Product;
 import org.example.Exception.ProductNotFoundException;
+
 import org.example.Service.ProductService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -42,8 +44,12 @@ public class ProductController {
 
     @PostMapping("seller/{sellerId}/product")
     public ResponseEntity<Product> addProduct(@RequestBody Product p, @PathVariable int sellerId) throws Exception {
-        Product product = productService.saveProduct(sellerId, p);
-        return new ResponseEntity<>(product, HttpStatus.CREATED);
+        try {
+            Product product = productService.saveProduct(sellerId, p);
+            return new ResponseEntity<>(product, HttpStatus.CREATED);
+        }catch (ProductNotFoundException e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("product/{productId}")
@@ -56,10 +62,22 @@ public class ProductController {
         }
     }
 
-    @DeleteMapping("product/{productId}")
-    public Product deleteProduct(@PathVariable int productId){
-        return productService.deleteProduct(productId);
+//    @DeleteMapping("product/{productId}")
+//    public Product deleteProduct(@PathVariable int productId) throws ProductNotFoundException {
+//                   return productService.deleteProduct(productId);
+//        }
+//    }
+@DeleteMapping("product/{productId}")
+public ResponseEntity<Product> deleteProduct(@PathVariable int productId) {
+    try {
+        Product deletedProduct = productService.deleteProduct(productId);
+        return ResponseEntity.ok(deletedProduct);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatusCode.valueOf(200))
+                .body(null); // You can customize the response body or message here
     }
+}
+
 
     @PatchMapping("product/{productId}")
     public Product deleteProduct(@PathVariable int productId, @RequestBody Product product) throws ProductNotFoundException {
