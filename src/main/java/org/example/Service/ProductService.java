@@ -81,14 +81,20 @@ public class ProductService {
     */
 
     //Update product and return the update
-    public Product updateProduct(int productId, Product newProduct){
+    public Product updateProduct(int productId, Product newProduct) throws ProductNotFoundException {
         Optional<Product> productOptional = productRepository.findById(productId);
         Product product = productOptional.get();
+
         //Set updated product name
         product.setProductTitle(newProduct.getProductTitle());
         //Set updated product price
         product.setProductPrice(newProduct.getProductPrice());
-        productRepository.save(product);
-        return product;
+
+        if (product.getProductPrice() == 0 || product.getProductTitle().isEmpty()) {
+            throw new ProductNotFoundException("Product must have a name and price greater than zero.");
+        } else {
+            productRepository.save(product);
+            return product;
+        }
     }
 }

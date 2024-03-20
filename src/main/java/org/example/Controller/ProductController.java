@@ -62,7 +62,7 @@ public class ProductController {
     }
 
     @PatchMapping("product/{productId}")
-    public Product deleteProduct(@PathVariable int productId, @RequestBody Product product){
+    public Product deleteProduct(@PathVariable int productId, @RequestBody Product product) throws ProductNotFoundException {
         return productService.updateProduct(productId, product);
     }
 }
