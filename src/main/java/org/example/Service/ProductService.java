@@ -14,6 +14,7 @@ import java.util.Optional;
 public class ProductService {
     ProductRepository productRepository;
     SellerRepository sellerRepository;
+
     @Autowired
     public ProductService(ProductRepository productRepository, SellerRepository sellerRepository){
         this.productRepository = productRepository;
@@ -22,6 +23,7 @@ public class ProductService {
 
     //Return all products
     public List<Product> getAllProducts(){
+        Main.log.info("Getting all products");
         return productRepository.findAll();
     }
 
@@ -29,11 +31,13 @@ public class ProductService {
     public Product saveProduct(int sellerId, Product p) throws ProductNotFoundException {
         Optional<Seller> optional = sellerRepository.findById(sellerId);
         Seller s;
+
         if(optional.isEmpty()){
-            throw new ProductNotFoundException("Product was not found, please try again..");
+            throw new ProductNotFoundException("Seller was not found, please try again..");
         }else{
             s = optional.get();
         }
+
         Product savedProduct = productRepository.save(p);
         s.getProducts().add(savedProduct);
         sellerRepository.save(s);
@@ -45,7 +49,7 @@ public class ProductService {
         return productRepository.findByTitle(productTitle);
     }
 
-    //Return product by productId
+    //Return products by productId
     public Product getById(int productId) throws ProductNotFoundException {
         Optional<Product> p = productRepository.findById(productId);
         if(p.isEmpty()){

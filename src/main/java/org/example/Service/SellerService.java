@@ -1,6 +1,8 @@
 package org.example.Service;
 
+import org.example.Entity.Product;
 import org.example.Entity.Seller;
+import org.example.Exception.ProductNotFoundException;
 import org.example.Exception.SellerException;
 import org.example.Main;
 import org.example.Repository.SellerRepository;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SellerService {
@@ -30,7 +33,7 @@ public Seller saveSeller(Seller seller) throws SellerException {
     List<Seller> sellerList = getAllSellers();
 
 // Logic to check to make sure Seller Name is not Empty/Blank
-    if (seller.getSellerName().isEmpty()) {
+    if (seller.getSellerName().trim().isEmpty()) {
         Main.log.warn("Seller's exception due to seller's name cannot be null");
         throw new SellerException("Seller's name cannot be null.");
     }
@@ -46,5 +49,15 @@ public Seller saveSeller(Seller seller) throws SellerException {
 
     Main.log.info("Adding a seller: " + seller);
     return sellerRepository.save(seller);
+    }
+
+    //Return products by productId
+    public Seller getById(int sellerId) throws SellerException {
+        Optional<Seller> s = sellerRepository.findById(sellerId);
+        if(s.isEmpty()){
+            throw new SellerException("Seller not found, please try again..");
+        }else{
+            return s.get();
+        }
     }
 }
