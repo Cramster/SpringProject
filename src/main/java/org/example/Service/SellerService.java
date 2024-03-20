@@ -51,7 +51,7 @@ public Seller saveSeller(Seller seller) throws SellerException {
     return sellerRepository.save(seller);
     }
 
-    //Return products by productId
+    //Return products by seller;Id
     public Seller getById(int sellerId) throws SellerException {
         Optional<Seller> s = sellerRepository.findById(sellerId);
         if(s.isEmpty()){

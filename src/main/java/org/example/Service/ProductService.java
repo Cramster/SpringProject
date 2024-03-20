@@ -79,9 +79,11 @@ public class ProductService {
     public Product updateProductTitle(int productId, Product newProduct){
         Optional<Product> productOptional = productRepository.findById(productId);
         Product product = productOptional.get();
+        //Set updated product name
         product.setProductTitle(newProduct.getProductTitle());
+        //Set updated product price
+        product.setProductPrice(newProduct.getProductPrice());
         productRepository.save(product);
-        Main.log.info("Updated product for ID: "+productId+", now named: "+product);
         return product;
     }
 }
