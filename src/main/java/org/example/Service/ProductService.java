@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class ProductService {
@@ -31,22 +32,32 @@ public class ProductService {
     public Product saveProduct(int sellerId, Product p) throws ProductNotFoundException {
         Optional<Seller> optionalSeller = sellerRepository.findById(sellerId);
         Seller s;
-        //Seller name logic check
-        if(optionalSeller.isEmpty()){
-            throw new ProductNotFoundException("Seller was not found, please try again..");
-        }else{
+
+        // Seller name logic check
+        if (optionalSeller.isEmpty()) {
+            throw new ProductNotFoundException("Seller was not found, please try again.");
+        } else {
             s = optionalSeller.get();
         }
-        //Product price and title logic check
-        if (p.getProductPrice() == 0 || p.getProductTitle().isEmpty()){
+
+        // Product price and title logic check
+        if (p.getProductPrice() == 0 || p.getProductTitle().isEmpty()) {
             throw new ProductNotFoundException("Product must have a name and price greater than zero.");
-        }
-        else{
+        } else {
+
+            int randomProductId = generateRandomProductId();
+            p.setProductId(randomProductId);
+
             Product savedProduct = productRepository.save(p);
             s.getProducts().add(savedProduct);
             sellerRepository.save(s);
             return savedProduct;
         }
+    }
+
+    private int generateRandomProductId() {
+        Random random = new Random();
+        return random.nextInt(9999) + 1;
     }
 
     //Return all products by productTitle
