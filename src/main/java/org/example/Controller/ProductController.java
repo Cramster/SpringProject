@@ -34,6 +34,12 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+//    @PostMapping("seller/{sellerId}/product")
+//    public ResponseEntity<Product> addProduct(@RequestBody Product p, @PathVariable int productId) throws Exception {
+//        Product product = productService.saveProduct(productId, p);
+//        return new ResponseEntity<>(product, HttpStatus.CREATED);
+//    }
+
     @PostMapping("seller/{sellerId}/product")
     public ResponseEntity<Product> addProduct(@RequestBody Product p, @PathVariable int sellerId) throws Exception {
         Product product = productService.saveProduct(sellerId, p);
