@@ -29,19 +29,24 @@ public class ProductService {
 
     //Add a product and return it
     public Product saveProduct(int sellerId, Product p) throws ProductNotFoundException {
-        Optional<Seller> optional = sellerRepository.findById(sellerId);
+        Optional<Seller> optionalSeller = sellerRepository.findById(sellerId);
         Seller s;
-
-        if(optional.isEmpty()){
+        //Seller name logic check
+        if(optionalSeller.isEmpty()){
             throw new ProductNotFoundException("Seller was not found, please try again..");
         }else{
-            s = optional.get();
+            s = optionalSeller.get();
         }
-
-        Product savedProduct = productRepository.save(p);
-        s.getProducts().add(savedProduct);
-        sellerRepository.save(s);
-        return savedProduct;
+        //Product price and title logic check
+        if (p.getProductPrice() == 0 || p.getProductTitle().isEmpty()){
+            throw new ProductNotFoundException("Product must have a name and price greater than zero.");
+        }
+        else{
+            Product savedProduct = productRepository.save(p);
+            s.getProducts().add(savedProduct);
+            sellerRepository.save(s);
+            return savedProduct;
+        }
     }
 
     //Return all products by productTitle
@@ -76,7 +81,7 @@ public class ProductService {
     */
 
     //Update product and return the update
-    public Product updateProductTitle(int productId, Product newProduct){
+    public Product updateProduct(int productId, Product newProduct){
         Optional<Product> productOptional = productRepository.findById(productId);
         Product product = productOptional.get();
         //Set updated product name
