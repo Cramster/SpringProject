@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class ProductService {
@@ -31,22 +32,32 @@ public class ProductService {
     public Product saveProduct(int sellerId, Product p) throws ProductNotFoundException {
         Optional<Seller> optionalSeller = sellerRepository.findById(sellerId);
         Seller s;
-        //Seller name logic check
-        if(optionalSeller.isEmpty()){
-            throw new ProductNotFoundException("Seller was not found, please try again..");
-        }else{
+
+        // Seller name logic check
+        if (optionalSeller.isEmpty()) {
+            throw new ProductNotFoundException("Seller was not found, please try again.");
+        } else {
             s = optionalSeller.get();
         }
-        //Product price and title logic check
-        if (p.getProductPrice() == 0 || p.getProductTitle().isEmpty()){
+
+        // Product price and title logic check
+        if (p.getProductPrice() == 0 || p.getProductTitle().trim().isEmpty()) {
             throw new ProductNotFoundException("Product must have a name and price greater than zero.");
-        }
-        else{
+        } else {
+
+            int randomProductId = generateRandomProductId();
+            p.setProductId(randomProductId);
+
             Product savedProduct = productRepository.save(p);
             s.getProducts().add(savedProduct);
             sellerRepository.save(s);
             return savedProduct;
         }
+    }
+
+    private int generateRandomProductId() {
+        Random random = new Random();
+        return random.nextInt(9999) + 1;
     }
 
     //Return all products by productTitle
@@ -65,12 +76,15 @@ public class ProductService {
     }
 
     //Delete product by Id
-    public Product deleteProduct(int productId){
+    public Product deleteProduct(int productId) throws ProductNotFoundException {
         Optional<Product> productOptional = productRepository.findById(productId);
+        if(productOptional.isEmpty()){
+            throw new ProductNotFoundException("Product was not found, please try again..");
+        }else{
         Product product = productOptional.get();
         productRepository.delete(product);
         Main.log.info("ProductService: deleting product for ID: "+productId+" named: "+product);
-        return product;
+        return product;}
     }
     /*
     //old delete code
