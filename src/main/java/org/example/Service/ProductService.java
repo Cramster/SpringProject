@@ -90,6 +90,7 @@ public class ProductService {
         //Set updated product price
         product.setProductPrice(newProduct.getProductPrice());
 
+        //validate updated product price and name
         if (product.getProductPrice() == 0 || product.getProductTitle().isEmpty()) {
             throw new ProductNotFoundException("Product must have a name and price greater than zero.");
         } else {
