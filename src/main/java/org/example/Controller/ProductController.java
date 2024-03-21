@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 @CrossOrigin
 @RestController
@@ -36,14 +38,8 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-//    @PostMapping("seller/{sellerId}/product")
-//    public ResponseEntity<Product> addProduct(@RequestBody Product p, @PathVariable int productId) throws Exception {
-//        Product product = productService.saveProduct(productId, p);
-//        return new ResponseEntity<>(product, HttpStatus.CREATED);
-//    }
-
     @PostMapping("seller/{sellerId}/product")
-    public ResponseEntity<Product> addProduct(@RequestBody Product p, @PathVariable int sellerId) throws Exception {
+    public ResponseEntity<Product> addProduct(@RequestBody Product p, @PathVariable int sellerId) {
         try {
             Product product = productService.saveProduct(sellerId, p);
             return new ResponseEntity<>(product, HttpStatus.CREATED);
@@ -62,11 +58,6 @@ public class ProductController {
         }
     }
 
-//    @DeleteMapping("product/{productId}")
-//    public Product deleteProduct(@PathVariable int productId) throws ProductNotFoundException {
-//                   return productService.deleteProduct(productId);
-//        }
-//    }
 @DeleteMapping("product/{productId}")
 public ResponseEntity<Product> deleteProduct(@PathVariable int productId) {
     try {
@@ -78,9 +69,12 @@ public ResponseEntity<Product> deleteProduct(@PathVariable int productId) {
     }
 }
 
-
     @PatchMapping("product/{productId}")
-    public Product deleteProduct(@PathVariable int productId, @RequestBody Product product) throws ProductNotFoundException {
-        return productService.updateProduct(productId, product);
+    public Product updateProduct(@PathVariable int productId, @RequestBody Product product) {
+        try {
+            return productService.updateProduct(productId, product);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found", e);
+        }
     }
 }

@@ -86,13 +86,6 @@ public class ProductService {
         Main.log.info("ProductService: deleting product for ID: "+productId+" named: "+product);
         return product;}
     }
-    /*
-    //old delete code
-    public Product deleteProduct(int productId){
-        productRepository.deleteById(productId);
-        return null;
-    }
-    */
 
     //Update product and return the update
     public Product updateProduct(int productId, Product newProduct) throws ProductNotFoundException {
